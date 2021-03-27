@@ -1,0 +1,12 @@
+server:
+  error:
+    include-stacktrace: on_param
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/avaliacao?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    username: osmar
+    password: 123mudar
+  jpa:
+    hibernate:
+      ddl-auto: update
