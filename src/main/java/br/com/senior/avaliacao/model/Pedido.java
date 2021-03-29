@@ -35,7 +35,6 @@ public class Pedido {
     @NotNull
     private Boolean ativo;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itemPedidoList;
 }

@@ -15,5 +15,5 @@ public class ItemPedidoResponse {
 
     private UUID id;
     private PedidoResponse pedidoResponse;
-    private ProdutoServicoResponse produtoServicoResponse;
+    private ProdutoServico produtoServico;
 }

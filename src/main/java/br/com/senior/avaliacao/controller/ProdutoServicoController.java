@@ -10,11 +10,13 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -58,9 +60,8 @@ public class ProdutoServicoController {
     }
 
     @DeleteMapping(path = "/deletar")
-    public ResponseEntity<ProdutoServicoResponse> Deletar(@NotNull @RequestBody ProdutoServicoRequest produtoServicoRequest){
+    public ResponseEntity<Void> Deletar(@NotNull @RequestBody ProdutoServicoRequest produtoServicoRequest){
         LOGGER.info("INICIANDO - DELETANDO PRODUTO / SERVIÇO");
-
 
         produtoServicoService.delete(UUID.fromString(produtoServicoRequest.getId()));
 

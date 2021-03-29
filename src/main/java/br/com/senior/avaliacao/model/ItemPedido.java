@@ -23,7 +23,7 @@ public class ItemPedido {
     @Column(updatable = false, unique = true, nullable = false)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne
     private Pedido pedido;
 
     @OneToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.EAGER)

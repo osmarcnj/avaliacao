@@ -50,8 +50,12 @@ public class ItemPedidoController {
 
 
         final ItemPedido itemPedido = requestToModel(itemPedidoRequest);
-      //  itemPedido.setPedido(pedidoService.findByIdOrThrowBadRequestException(UUID.fromString(itemPedidoRequest.getIdPedido())));
-      //  itemPedido.setProdutoServico(produtoServicoService.findByIdOrThrowBadRequestException(UUID.fromString(itemPedidoRequest.getIdProdutoServico())));
+        itemPedido.setPedido(pedidoService.findByIdOrThrowBadRequestException(
+                UUID.fromString(itemPedidoRequest
+                        .getPedidoRequest().getId())));
+        itemPedido.setProdutoServico(produtoServicoService.findByIdOrThrowBadRequestException(
+                UUID.fromString(itemPedidoRequest
+                        .getProdutoServicoRequest().getId())));
         final ItemPedidoResponse response = modelToResponse(itemPedidoService.save(itemPedido));
 
         LOGGER.info("FINALIZANDO - SALVANDO ITEM PEDIDO");
@@ -92,7 +96,11 @@ public class ItemPedidoController {
     @GetMapping (path = "/listTeste")
     public ResponseEntity<List<ItemPedido>> listTeste(){
         List<ItemPedido> itemPedidoList = itemPedidoService.listAll();
-
+        for (ItemPedido item: itemPedidoList) {
+            LOGGER.info(item.getId().toString());
+           LOGGER.error(item.getPedido().getId() + "IdPedido");
+            LOGGER.error(item.getProdutoServico().getId() + "IDProduto Serviço");
+        }
         return ResponseEntity.ok(itemPedidoList);
     }
 

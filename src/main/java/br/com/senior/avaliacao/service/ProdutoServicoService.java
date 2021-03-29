@@ -8,10 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.ConstraintDeclarationException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -50,10 +54,14 @@ public class ProdutoServicoService {
                 .orElseThrow(() -> new ObjectNotFoundException("OBJETO NAO ENCONTRADO COM O UUID : " + id));
     }
 
-    public void delete(UUID id) {
+    public void delete(UUID id)  {
+            try{
+                repository.delete(findByIdOrThrowBadRequestException(id));
+            }catch (DataIntegrityViolationException e){
+                throw new AvaliacaoException("PRODUTO / SERVIÇO NÃO PODE SER DELETADO", e);
+            }
 
-        repository.delete(findByIdOrThrowBadRequestException(id));
+
     }
-
 
 }
