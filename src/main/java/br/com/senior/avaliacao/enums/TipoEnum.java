@@ -22,6 +22,6 @@ public enum TipoEnum {
 			if(descricao.equals(x.getDescricao()))
 				return x;
 		}
-		throw new IllegalArgumentException("Descrição Inválido: " + descricao);
+		throw new IllegalArgumentException("Descrição tipo Inválido: " + descricao);
 	}
 }

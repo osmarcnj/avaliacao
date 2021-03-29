@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +56,17 @@ public class ProdutoServicoController {
     	return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @DeleteMapping(path = "/deletar")
+    public ResponseEntity<ProdutoServicoResponse> Deletar(@Valid @RequestBody String id){
+        LOGGER.info("INICIANDO - DELETANDO PRODUTO");
+
+
+        produtoServicoService.delete(UUID.fromString(id));
+
+        LOGGER.info("FINALIZANDO - DELETANDO PRODUTO");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<ProdutoServicoResponse>> list(){
         List<ProdutoServico> produtoServicoRespons = produtoServicoService.listAll();
@@ -61,6 +74,12 @@ public class ProdutoServicoController {
         return ResponseEntity.ok(produtoServicoRespons.stream().map(this::modelToResponse)
                 .collect(Collectors.toList()));
     }
+
+    @GetMapping (path = "/listPage")
+    public ResponseEntity<Page<ProdutoServico>> listPage(Pageable pageable){
+        return ResponseEntity.ok(produtoServicoService.listAll(pageable));
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<ProdutoServicoResponse> findById(@PathVariable String id){
         final ProdutoServico produtoServico = produtoServicoService.findByIdOrThrowBadRequestException(UUID.fromString(id));
@@ -74,4 +93,9 @@ public class ProdutoServicoController {
     private ProdutoServicoResponse modelToResponse(final ProdutoServico produtoServico) {
         return modelMapper.map(produtoServico, ProdutoServicoResponse.class);
     }
+
+
+
+
+
 }
