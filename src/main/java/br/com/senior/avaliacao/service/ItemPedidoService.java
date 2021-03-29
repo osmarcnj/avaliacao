@@ -2,8 +2,8 @@ package br.com.senior.avaliacao.service;
 
 import br.com.senior.avaliacao.exception.AvaliacaoException;
 import br.com.senior.avaliacao.exception.ObjectNotFoundException;
-import br.com.senior.avaliacao.model.ProdutoServico;
-import br.com.senior.avaliacao.repository.ProdutoServicoRepository;
+import br.com.senior.avaliacao.model.ItemPedido;
+import br.com.senior.avaliacao.repository.ItemPedidoRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,42 +18,45 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ProdutoServicoService {
+public class ItemPedidoService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProdutoServicoService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemPedidoService.class);
 
-	@Autowired
-    private ProdutoServicoRepository repository;
+    @Autowired
+    private ItemPedidoRepository repository;
 
-    public List<ProdutoServico> listAll(){
+    public List<ItemPedido> listAll(){
         return repository.findAll();
     }
-
-    public Page<ProdutoServico> listAll(Pageable pageable){
+    public Page<ItemPedido> listAll(Pageable pageable){
         return repository.findAll(pageable);
     }
 
-    public ProdutoServico save(ProdutoServico produtoServico) {
+    public ItemPedido save(ItemPedido itemPedido) {
         try {
-            if(Objects.isNull(produtoServico.getId())) {
-                produtoServico.setId(UUID.randomUUID());
+            if(Objects.isNull(itemPedido.getId())) {
+                itemPedido.setId(UUID.randomUUID());
             }
-            return repository.save(produtoServico);
+
+           return repository.save(itemPedido);
         } catch (Exception e) {
-            LOGGER.error("ERRO AO SALVAR PRODUTO {}", e);
-            throw new AvaliacaoException("OCORREU UM ERRO AO SALVAR O PRODUTO ", e);
+            LOGGER.error("ERRO AO SALVAR ITEM DO PEDIDO {}", e);
+            throw new AvaliacaoException("OCORREU UM ERRO AO SALVAR O ITEM DO PEDIDO ", e);
         }
     }
 
-    public ProdutoServico findByIdOrThrowBadRequestException(UUID id){
+    public ItemPedido findByIdOrThrowBadRequestException(UUID id){
         return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("OBJETO NAO ENCONTRADO COM O UUID : " + id));
     }
 
-    public void delete(UUID id) {
 
+
+
+    public void delete(UUID id) {
         repository.delete(findByIdOrThrowBadRequestException(id));
     }
+
 
 
 }

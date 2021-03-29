@@ -1,7 +1,9 @@
 package br.com.senior.avaliacao.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -12,6 +14,8 @@ import java.util.UUID;
 @Table(name = "itemPedido")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemPedido {
 
     @Id
@@ -22,7 +26,7 @@ public class ItemPedido {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Pedido pedido;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.EAGER)
     private ProdutoServico produtoServico;
 
 }

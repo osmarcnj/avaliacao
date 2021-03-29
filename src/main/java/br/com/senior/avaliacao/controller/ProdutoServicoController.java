@@ -5,6 +5,7 @@ import br.com.senior.avaliacao.model.request.ProdutoServicoRequest;
 import br.com.senior.avaliacao.model.response.ProdutoServicoResponse;
 import br.com.senior.avaliacao.service.ProdutoServicoService;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class ProdutoServicoController {
     	return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping(path = "/alterar")
+    @PutMapping(path = "/alterar")
     public ResponseEntity<ProdutoServicoResponse> alterar(@Valid @RequestBody ProdutoServicoRequest produtoServicoRequest){
         LOGGER.info("INICIANDO - ALTERANDO PRODUTO");
 
@@ -57,13 +58,13 @@ public class ProdutoServicoController {
     }
 
     @DeleteMapping(path = "/deletar")
-    public ResponseEntity<ProdutoServicoResponse> Deletar(@Valid @RequestBody String id){
-        LOGGER.info("INICIANDO - DELETANDO PRODUTO");
+    public ResponseEntity<ProdutoServicoResponse> Deletar(@NotNull @RequestBody ProdutoServicoRequest produtoServicoRequest){
+        LOGGER.info("INICIANDO - DELETANDO PRODUTO / SERVIÇO");
 
 
-        produtoServicoService.delete(UUID.fromString(id));
+        produtoServicoService.delete(UUID.fromString(produtoServicoRequest.getId()));
 
-        LOGGER.info("FINALIZANDO - DELETANDO PRODUTO");
+        LOGGER.info("FINALIZANDO - DELETANDO PRODUTO / SERVIÇO");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

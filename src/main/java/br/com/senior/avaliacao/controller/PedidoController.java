@@ -1,12 +1,11 @@
 package br.com.senior.avaliacao.controller;
 
 import br.com.senior.avaliacao.model.Pedido;
-import br.com.senior.avaliacao.model.ProdutoServico;
 import br.com.senior.avaliacao.model.request.PedidoRequest;
 import br.com.senior.avaliacao.model.response.PedidoResponse;
-import br.com.senior.avaliacao.model.response.ProdutoServicoResponse;
 import br.com.senior.avaliacao.service.PedidoService;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +43,29 @@ public class PedidoController {
 
         LOGGER.info("FINALIZANDO - SALVANDO PEDIDO");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping(path = "/alterar")
+    public ResponseEntity<PedidoResponse> alterar(@Valid @RequestBody PedidoRequest pedidoRequest){
+        LOGGER.info("INICIANDO - ALTERANDO PEDIDO");
+
+        final Pedido pedido = requestToModel(pedidoRequest);
+        pedido.setId(UUID.fromString(pedidoRequest.getId()));
+        final PedidoResponse response = modelToResponse(pedidoService.save(pedido));
+
+        LOGGER.info("FINALIZANDO - ALTERANDO PEDIDO");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path = "/deletar")
+    public ResponseEntity<PedidoResponse> Deletar(@NotNull @RequestBody PedidoRequest pedidoRequest){
+        LOGGER.info("INICIANDO - DELETANDO PEDIDO");
+
+
+        pedidoService.delete(UUID.fromString(pedidoRequest.getId()));
+
+        LOGGER.info("FINALIZANDO - DELETANDO PEDIDO");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping

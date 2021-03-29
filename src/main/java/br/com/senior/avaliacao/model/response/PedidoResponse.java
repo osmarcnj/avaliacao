@@ -19,5 +19,5 @@ public class PedidoResponse {
     private BigDecimal desconto;
     private BigDecimal valorTotalComDesconto;
     private Boolean ativo;
-    private List<ItemPedido> itemPedidoList;
+    private List<ItemPedidoResponse> itemPedidoResponseList;
 }
