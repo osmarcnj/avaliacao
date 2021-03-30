@@ -71,7 +71,7 @@ public class ProdutoServicoServiceTest {
     @Test
     public void porNome(){
         final ProdutoServico produto = createProdutoServicoService();
-        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(produto));
+        Mockito.when(repository.findByName(produto.getName())).thenReturn(Arrays.asList(produto));
 
         List<ProdutoServico> lista = produtoServicoService.listPorName(produto.getName());
 

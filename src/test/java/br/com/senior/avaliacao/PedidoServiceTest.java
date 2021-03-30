@@ -83,18 +83,9 @@ public class PedidoServiceTest {
         Assert.assertEquals(0, lista.size());
     }
 
-
-
-
-
-
     private Pedido createPedidoService() {
         Pedido request = new Pedido();
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, 2021);
-        c.set(Calendar.MONTH, Calendar.MARCH);
-        c.set(Calendar.DAY_OF_MONTH, 29);
-        request.setDataPedido(c);
+        request.setDataPedido(new Date());
         request.setAtivo(true);
         return request;
     }

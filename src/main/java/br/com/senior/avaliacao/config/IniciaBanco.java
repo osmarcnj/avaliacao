@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 @Configuration
 public class IniciaBanco {
+
     @Autowired
     private ProdutoServicoRepository psr;
     @Autowired
@@ -25,50 +25,71 @@ public class IniciaBanco {
 
     @Bean
     public void gerarDados() {
-        final ProdutoServico ps = criarProdutoServico();
-        criarProduto(ps);
+        final ProdutoServico produto = criarProdutoServico(TipoEnum.PRODUTO);
+        final ProdutoServico servico = criarProdutoServico(TipoEnum.SERVICO);
+
+        Pedido pedido = new Pedido();
+
+        criarPedido(pedido, produto, 2, BigDecimal.valueOf(10.2), 10.0);
+        criarPedido(pedido, servico, 3, BigDecimal.valueOf(33.33), 10.0);
     }
 
-    private ProdutoServico criarProdutoServico() {
+    private ProdutoServico criarProdutoServico(final TipoEnum tipoEnum) {
         ProdutoServico ps = new ProdutoServico();
         ps.setId(UUID.randomUUID());
-        ps.setName("Teste Produto");
+        ps.setName("Teste " + tipoEnum.name());
         ps.setAtivo(true);
-        ps.setTipoDado(TipoEnum.PRODUTO);
+        ps.setTipoDado(tipoEnum);
 
         return psr.save(ps);
     }
-
-    private void criarProduto(final ProdutoServico ps) {
-        Pedido pedido = new Pedido();
+    //TODO - LEVAR PARA PEDIDOSERVICE
+    private void criarPedido(final Pedido pedido, final ProdutoServico ps,
+            final int qtd, final BigDecimal valor, final double desc) {
         pedido.setId(UUID.randomUUID());
         pedido.setDataPedido(new Date());
         pedido.setAtivo(true);
         pedido.setValor(BigDecimal.ZERO);
+        pedido.setDesconto(BigDecimal.ZERO);
         pedido.setValorTotal(BigDecimal.ZERO);
 
         pedido.setItemPedidoList(new ArrayList<>());
-        pedido.getItemPedidoList().add(criarItem(pedido, ps));
+        pedido.getItemPedidoList().add(criarItem(pedido, ps, qtd, valor));
 
-        pedido.getItemPedidoList()
-                .stream().map(itemPedido -> {
-            pedido.setValor(pedido.getValor().add(itemPedido.getValorTotal()));
-            pedido.setValorTotal(pedido.getValorTotal().add(itemPedido.getValorTotal()));
-            return null;
-        });
+        calcularTotalPedido(pedido, desc);
 
         pr.save(pedido);
     }
 
-    private ItemPedido criarItem(final Pedido pedido, final ProdutoServico ps) {
+    private void calcularTotalPedido(final Pedido pedido, double desc) {
+        pedido.getItemPedidoList()
+                .forEach(itemPedido -> {
+            pedido.setValor(pedido.getValor().add(itemPedido.getValorTotal()));
+            gerarDesconto(itemPedido, desc);
+            pedido.setValorTotal(pedido.getValorTotal().add(itemPedido.getValorTotal()));
+        });
+
+    }
+
+    private ItemPedido criarItem(final Pedido pedido, final ProdutoServico ps,
+            final int qtd, final BigDecimal valor) {
         ItemPedido itemPedido = new ItemPedido();
-        itemPedido.setValor(BigDecimal.valueOf(10.5));
-        itemPedido.setQtd(2);
+        itemPedido.setQtd(qtd);
+        itemPedido.setValor(valor);
         itemPedido.setValorTotal(BigDecimal.valueOf(itemPedido.getValor().doubleValue() * itemPedido.getQtd()));
         itemPedido.setPedido(pedido);
         itemPedido.setProdutoServico(ps);
 
-        return itemPedido;
+       return itemPedido;
+    }
+
+    private void gerarDesconto(ItemPedido ip, double desc) {
+        if(desc > 0 && ip.getProdutoServico().getTipoDado().equals(TipoEnum.PRODUTO)) {
+            var valorDesc = (ip.getValorTotal().doubleValue() * desc) /100;
+            ip.setDesconto(BigDecimal.valueOf(valorDesc));
+            ip.setValorTotal(ip.getValorTotal().subtract(BigDecimal.valueOf(valorDesc)));
+            ip.getPedido().setDesconto(ip.getPedido().getDesconto().add(ip.getDesconto()));
+        }
     }
 
 }

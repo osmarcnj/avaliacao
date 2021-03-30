@@ -31,7 +31,7 @@ public class ItemPedidoService {
     public Page<ItemPedido> listAll(Pageable pageable){
         return repository.findAll(pageable);
     }
-
+    //TODO - QUEM SALVA O ITEM É O PEDIDO
     public ItemPedido save(ItemPedido itemPedido) {
         try {
             if(Objects.isNull(itemPedido.getId())) {
@@ -49,9 +49,6 @@ public class ItemPedidoService {
         return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("OBJETO NAO ENCONTRADO COM O UUID : " + id));
     }
-
-
-
 
     public void delete(UUID id) {
         repository.delete(findByIdOrThrowBadRequestException(id));
