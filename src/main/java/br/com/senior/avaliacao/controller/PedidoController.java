@@ -2,10 +2,10 @@ package br.com.senior.avaliacao.controller;
 
 import br.com.senior.avaliacao.model.Pedido;
 import br.com.senior.avaliacao.model.request.PedidoRequest;
+import br.com.senior.avaliacao.model.response.ItemPedidoResponse;
 import br.com.senior.avaliacao.model.response.PedidoResponse;
 import br.com.senior.avaliacao.service.PedidoService;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +17,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value ="/pedido")
+@RequestMapping(value ="/pedidos")
 @RequiredArgsConstructor
 public class PedidoController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProdutoServicoController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PedidoController.class);
 
     @Autowired
     private PedidoService pedidoService;
@@ -39,10 +41,9 @@ public class PedidoController {
         LOGGER.info("INICIANDO - SALVANDO PEDIDO");
 
         final Pedido pedido = requestToModel(pedidoRequest);
-        final PedidoResponse response = modelToResponse(pedidoService.save(pedido));
 
         LOGGER.info("FINALIZANDO - SALVANDO PEDIDO");
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(modelToResponse(pedidoService.save(pedido)), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/alterar")
@@ -51,18 +52,16 @@ public class PedidoController {
 
         final Pedido pedido = requestToModel(pedidoRequest);
         pedido.setId(UUID.fromString(pedidoRequest.getId()));
-        final PedidoResponse response = modelToResponse(pedidoService.save(pedido));
 
         LOGGER.info("FINALIZANDO - ALTERANDO PEDIDO");
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(modelToResponse(pedidoService.save(pedido)), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/deletar")
-    public ResponseEntity<PedidoResponse> Deletar(@NotNull @RequestBody PedidoRequest pedidoRequest){
+    public ResponseEntity<PedidoResponse> deletar(@PathVariable String id){
         LOGGER.info("INICIANDO - DELETANDO PEDIDO");
 
-
-        pedidoService.delete(UUID.fromString(pedidoRequest.getId()));
+        pedidoService.delete(UUID.fromString(id));
 
         LOGGER.info("FINALIZANDO - DELETANDO PEDIDO");
         return new ResponseEntity<>(HttpStatus.OK);
@@ -72,8 +71,21 @@ public class PedidoController {
     public ResponseEntity<List<PedidoResponse>> list(){
         List<Pedido> pedidoList = pedidoService.listAll();
 
-        return ResponseEntity.ok(pedidoList.stream().map(this::modelToResponse)
-                .collect(Collectors.toList()));
+        final List<PedidoResponse> response = new ArrayList<>();
+        pedidoList.forEach(pedido -> {
+            PedidoResponse pr = modelToResponse(pedido);
+            pr.setItemPedidoResponseList(new ArrayList<>());
+
+            pedido.getItemPedidoList().forEach(itemPedido -> {
+                pr.getItemPedidoResponseList().add(
+                  modelMapper.map(itemPedido, ItemPedidoResponse.class)
+                );
+            });
+
+            response.add(pr);
+        });
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping (path = "/listPage")

@@ -37,7 +37,7 @@ public class PedidoService {
         try {
             if(Objects.isNull(pedido.getId())) {
                 pedido.setId(UUID.randomUUID());
-                pedido.setDataPedido(Calendar.getInstance());
+                pedido.setDataPedido(new Date());
             }
 
             return repository.save(pedido);

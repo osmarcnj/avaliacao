@@ -5,18 +5,16 @@ import br.com.senior.avaliacao.model.request.ProdutoServicoRequest;
 import br.com.senior.avaliacao.model.response.ProdutoServicoResponse;
 import br.com.senior.avaliacao.service.ProdutoServicoService;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -60,10 +58,10 @@ public class ProdutoServicoController {
     }
 
     @DeleteMapping(path = "/deletar")
-    public ResponseEntity<Void> Deletar(@NotNull @RequestBody ProdutoServicoRequest produtoServicoRequest){
+    public ResponseEntity<Void> deletar(@PathVariable String id){
         LOGGER.info("INICIANDO - DELETANDO PRODUTO / SERVIÇO");
 
-        produtoServicoService.delete(UUID.fromString(produtoServicoRequest.getId()));
+        produtoServicoService.delete(UUID.fromString(id));
 
         LOGGER.info("FINALIZANDO - DELETANDO PRODUTO / SERVIÇO");
         return new ResponseEntity<>(HttpStatus.OK);
@@ -71,15 +69,17 @@ public class ProdutoServicoController {
 
     @GetMapping
     public ResponseEntity<List<ProdutoServicoResponse>> list(){
-        List<ProdutoServico> produtoServicoRespons = produtoServicoService.listAll();
+        List<ProdutoServico> produtoServicoResponse = produtoServicoService.listAll();
 
-        return ResponseEntity.ok(produtoServicoRespons.stream().map(this::modelToResponse)
+        return ResponseEntity.ok(produtoServicoResponse.stream().map(this::modelToResponse)
                 .collect(Collectors.toList()));
     }
 
     @GetMapping (path = "/listPage")
-    public ResponseEntity<Page<ProdutoServico>> listPage(Pageable pageable){
-        return ResponseEntity.ok(produtoServicoService.listAll(pageable));
+    public ResponseEntity<Page<ProdutoServicoResponse>> listPage(Pageable pageable){
+        final Page<ProdutoServico> produtoServicos = produtoServicoService.listAll(pageable);
+        return ResponseEntity.ok(new PageImpl<>(produtoServicos.stream()
+                .map(this::modelToResponse).collect(Collectors.toList())));
     }
 
     @GetMapping(path = "/{id}")

@@ -21,7 +21,7 @@ public class ProdutoServico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(updatable = false, unique = true, nullable = false)
+    @Column(updatable = false, unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     @NotBlank

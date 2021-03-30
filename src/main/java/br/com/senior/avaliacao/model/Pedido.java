@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,14 +24,14 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(updatable = false, unique = true, nullable = false)
+    @Column(updatable = false, unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     @NotNull
-    private Calendar dataPedido;
-    private BigDecimal valorTotal;
+    private Date dataPedido;
+    private BigDecimal valor;
     private BigDecimal desconto;
-    private BigDecimal valorTotalComDesconto;
+    private BigDecimal valorTotal;
 
     @NotNull
     private Boolean ativo;

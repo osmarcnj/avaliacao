@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity(name = "itemPedido")
@@ -20,13 +19,18 @@ public class ItemPedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(updatable = false, unique = true, nullable = false)
+    @Column(updatable = false, unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
+
+    private BigDecimal valor;
+    private BigDecimal desconto;
+    private BigDecimal valorTotal;
+    private Integer qtd;
 
     @ManyToOne
     private Pedido pedido;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.EAGER)
+    @ManyToOne
     private ProdutoServico produtoServico;
 
 }
