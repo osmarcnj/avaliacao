@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity(name = "produtoservico")
@@ -20,8 +21,8 @@ import java.util.UUID;
 public class ProdutoServico {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(updatable = false, unique = true, nullable = false, columnDefinition = "BINARY(16)")
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false, unique = true, nullable = false)
     private UUID id;
 
     @NotBlank
@@ -33,4 +34,7 @@ public class ProdutoServico {
 
     @NotNull
     private Boolean ativo;
+
+    @NotNull
+    private BigDecimal valor;
 }

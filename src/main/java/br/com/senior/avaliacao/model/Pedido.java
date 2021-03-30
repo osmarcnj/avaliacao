@@ -24,8 +24,8 @@ import java.util.UUID;
 public class Pedido {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(updatable = false, unique = true, nullable = false, columnDefinition = "BINARY(16)")
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false, unique = true, nullable = false)
     private UUID id;
 
     @NotNull

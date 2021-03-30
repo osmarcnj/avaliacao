@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -29,5 +30,8 @@ public class ProdutoServicoRequest {
 
     @NotNull(message = "OBRIGADO INFORMAR")
     private Boolean ativo;
+
+    @NotNull(message = "OBRIGADO INFORMAR O VALOR")
+    private BigDecimal valor;
 
 }

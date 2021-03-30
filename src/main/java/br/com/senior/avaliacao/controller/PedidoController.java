@@ -1,9 +1,11 @@
 package br.com.senior.avaliacao.controller;
 
 import br.com.senior.avaliacao.model.Pedido;
+import br.com.senior.avaliacao.model.request.ItemPedidoRequest;
 import br.com.senior.avaliacao.model.request.PedidoRequest;
 import br.com.senior.avaliacao.model.response.ItemPedidoResponse;
 import br.com.senior.avaliacao.model.response.PedidoResponse;
+import br.com.senior.avaliacao.service.ItemPedidoService;
 import br.com.senior.avaliacao.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -41,7 +43,8 @@ public class PedidoController {
         final Pedido pedido = requestToModel(pedidoRequest);
 
         LOGGER.info("FINALIZANDO - SALVANDO PEDIDO");
-        return new ResponseEntity<>(modelToResponse(pedidoService.save(pedido)), HttpStatus.CREATED);
+        return new ResponseEntity<>(modelToResponse(pedidoService.criarPedido(pedido)), HttpStatus.CREATED);
+
     }
 
     @PutMapping(path = "/alterar")
@@ -49,14 +52,14 @@ public class PedidoController {
         LOGGER.info("INICIANDO - ALTERANDO PEDIDO");
 
         final Pedido pedido = requestToModel(pedidoRequest);
-        pedido.setId(UUID.fromString(pedidoRequest.getId()));
+         pedido.setId(UUID.fromString(pedidoRequest.getId()));
 
         LOGGER.info("FINALIZANDO - ALTERANDO PEDIDO");
-        return new ResponseEntity<>(modelToResponse(pedidoService.save(pedido)), HttpStatus.CREATED);
+        return new ResponseEntity<>(modelToResponse(pedidoService.alterar(pedido)), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/deletar")
-    public ResponseEntity<PedidoResponse> deletar(@PathVariable String id){
+    @DeleteMapping(path = "/deletar/{id}")
+    public ResponseEntity<Void> deletar (@PathVariable String id){
         LOGGER.info("INICIANDO - DELETANDO PEDIDO");
 
         pedidoService.delete(UUID.fromString(id));
@@ -77,7 +80,6 @@ public class PedidoController {
             pedido.getItemPedidoList().forEach(itemPedido -> pr.getItemPedidoResponseList().add(
               modelMapper.map(itemPedido, ItemPedidoResponse.class)
             ));
-
             response.add(pr);
         });
 
@@ -102,4 +104,29 @@ public class PedidoController {
     private PedidoResponse modelToResponse(final Pedido pedido) {
         return modelMapper.map(pedido, PedidoResponse.class);
     }
+
+    @PutMapping(path = "/addItem")
+    public ResponseEntity<PedidoResponse> addItem(@Valid @RequestBody PedidoRequest pedidoRequest){
+        LOGGER.info("INICIANDO - ADD ITEM");
+
+        final Pedido pedido = requestToModel(pedidoRequest);
+        pedido.setId(UUID.fromString(pedidoRequest.getId()));
+
+
+        LOGGER.info("FINALIZANDO - ADD ITEM");
+        return new ResponseEntity<>(modelToResponse(pedidoService.addItem(pedido)), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path = "/removeItem")
+    public ResponseEntity<PedidoResponse> removeItem(@Valid @RequestBody PedidoRequest pedidoRequest){
+        LOGGER.info("INICIANDO - DELETE ITEM");
+
+        final Pedido pedido = requestToModel(pedidoRequest);
+        pedido.setId(UUID.fromString(pedidoRequest.getId()));
+        pedidoService.removeItem(pedido);
+
+        LOGGER.info("FINALIZANDO - DELETE ITEM");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

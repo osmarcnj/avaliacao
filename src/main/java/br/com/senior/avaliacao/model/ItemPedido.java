@@ -18,8 +18,8 @@ import java.util.UUID;
 public class ItemPedido {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(updatable = false, unique = true, nullable = false, columnDefinition = "BINARY(16)")
+   // @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false, unique = true, nullable = false)
     private UUID id;
 
     private BigDecimal valor;

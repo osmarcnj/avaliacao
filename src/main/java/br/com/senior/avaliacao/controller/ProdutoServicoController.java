@@ -50,14 +50,14 @@ public class ProdutoServicoController {
         LOGGER.info("INICIANDO - ALTERANDO PRODUTO");
 
         final ProdutoServico produtoServico = requestToModel(produtoServicoRequest);
-    	produtoServico.setId(UUID.fromString(produtoServicoRequest.getId()));
-    	final br.com.senior.avaliacao.model.response.ProdutoServicoResponse response = modelToResponse(produtoServicoService.save(produtoServico));
+    //	produtoServico.setId(UUID.fromString(produtoServicoRequest.getId()));
+    	final ProdutoServicoResponse response = modelToResponse(produtoServicoService.save(produtoServico));
 
     	LOGGER.info("FINALIZANDO - ALTERANDO PRODUTO");
     	return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/deletar")
+    @DeleteMapping(path = "/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable String id){
         LOGGER.info("INICIANDO - DELETANDO PRODUTO / SERVIÇO");
 

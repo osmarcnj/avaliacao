@@ -19,7 +19,7 @@ public class PedidoResponse {
 
     @JsonProperty("data_pedido")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss",lenient = OptBoolean.FALSE)
-    private String  dataPedido;
+    private Calendar  dataPedido;
 
     @JsonProperty("valor")
     private BigDecimal valor;
@@ -30,5 +30,7 @@ public class PedidoResponse {
     private BigDecimal valorTotal;
 
     private Boolean ativo;
+
+    @JsonProperty("item_pedido")
     private List<ItemPedidoResponse> itemPedidoResponseList;
 }

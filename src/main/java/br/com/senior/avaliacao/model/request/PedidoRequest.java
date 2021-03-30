@@ -1,7 +1,9 @@
 package br.com.senior.avaliacao.model.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.OptBoolean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,18 +21,18 @@ public class PedidoRequest {
     private String id;
 
     @JsonProperty("data_pedido")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss",lenient = OptBoolean.FALSE)
     private Calendar dataPedido;
+
+    private BigDecimal valor;
 
     @JsonProperty("valor_total")
     private BigDecimal valorTotal;
 
     private BigDecimal desconto;
 
-    @JsonProperty("valor_total_com_desconto")
-    private BigDecimal valorTotalComDesconto;
-
     private Boolean ativo;
 
-    @JsonProperty("item_pedido_request_list")
+    @JsonProperty("item_pedido")
     private List<ItemPedidoRequest> itemPedidoRequestList;
 }

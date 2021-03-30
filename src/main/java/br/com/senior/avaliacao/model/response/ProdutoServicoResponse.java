@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -17,4 +18,6 @@ public class ProdutoServicoResponse {
     private String tipoDado;
 
     private Boolean ativo;
+
+    private BigDecimal valor;
 }
