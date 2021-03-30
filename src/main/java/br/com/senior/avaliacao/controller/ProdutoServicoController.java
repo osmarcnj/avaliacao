@@ -88,6 +88,13 @@ public class ProdutoServicoController {
         return new ResponseEntity<>(modelToResponse(produtoServico), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/listName/{name}")
+    public ResponseEntity<List<ProdutoServicoResponse>> findByName(@PathVariable String name){
+        List<ProdutoServico>  produtoServico = produtoServicoService.listPorName(name);
+        return ResponseEntity.ok(produtoServico.stream().map(this::modelToResponse)
+                .collect(Collectors.toList()));
+    }
+
     private ProdutoServico requestToModel(final ProdutoServicoRequest produtoServicoRequest) {
         return modelMapper.map(produtoServicoRequest, ProdutoServico.class);
     }

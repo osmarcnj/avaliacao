@@ -2,6 +2,7 @@ package br.com.senior.avaliacao;
 
 import br.com.senior.avaliacao.enums.TipoEnum;
 import br.com.senior.avaliacao.exception.ObjectNotFoundException;
+import br.com.senior.avaliacao.model.Pedido;
 import br.com.senior.avaliacao.model.ProdutoServico;
 import br.com.senior.avaliacao.repository.ProdutoServicoRepository;
 import br.com.senior.avaliacao.service.ProdutoServicoService;
@@ -67,11 +68,32 @@ public class ProdutoServicoServiceTest {
         Assert.assertEquals(produto, produtoRetorno);
     }
 
+    @Test
+    public void porNome(){
+        final ProdutoServico produto = createProdutoServicoService();
+        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(produto));
+
+        List<ProdutoServico> lista = produtoServicoService.listPorName(produto.getName());
+
+        Assert.assertEquals(1, lista.size());
+
+    }
+
     @Test(expected = ObjectNotFoundException.class)
     public void porIdException() {
         Mockito.when(repository.findById(Mockito.any())).thenThrow(new ObjectNotFoundException("Teste"));
 
         produtoServicoService.findByIdOrThrowBadRequestException(UUID.randomUUID());
+    }
+
+    @Test
+    public void delete() {
+        final ProdutoServico produtoServico = createProdutoServicoService();
+        Mockito.when(repository.findById(Mockito.any())).thenReturn(Optional.of(produtoServico));
+        produtoServicoService.delete(produtoServico.getId());
+
+        final List<ProdutoServico> lista = produtoServicoService.listAll();
+        Assert.assertEquals(0, lista.size());
     }
 
     private ProdutoServico createProdutoServicoService() {

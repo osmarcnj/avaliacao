@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.OptBoolean;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -28,6 +30,5 @@ public class PedidoResponse {
     private BigDecimal valorTotal;
 
     private Boolean ativo;
-
     private List<ItemPedidoResponse> itemPedidoResponseList;
 }
