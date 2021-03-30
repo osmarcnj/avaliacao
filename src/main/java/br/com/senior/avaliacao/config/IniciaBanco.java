@@ -28,10 +28,12 @@ public class IniciaBanco {
         final ProdutoServico produto = criarProdutoServico(TipoEnum.PRODUTO);
         final ProdutoServico servico = criarProdutoServico(TipoEnum.SERVICO);
 
-        Pedido pedido = new Pedido();
+        Pedido pedido = criarPedido();
 
-        criarPedido(pedido, produto, 2, BigDecimal.valueOf(10.2), 10.0);
-        criarPedido(pedido, servico, 3, BigDecimal.valueOf(33.33), 10.0);
+        finalizarDadosPedido(pedido, produto, 2, BigDecimal.valueOf(10.2), 10.0);
+        finalizarDadosPedido(pedido, servico, 3, BigDecimal.valueOf(33.33), 10.0);
+
+        pr.save(pedido);
     }
 
     private ProdutoServico criarProdutoServico(final TipoEnum tipoEnum) {
@@ -44,8 +46,8 @@ public class IniciaBanco {
         return psr.save(ps);
     }
     //TODO - LEVAR PARA PEDIDOSERVICE
-    private void criarPedido(final Pedido pedido, final ProdutoServico ps,
-            final int qtd, final BigDecimal valor, final double desc) {
+    private Pedido criarPedido() {
+        final Pedido pedido = new Pedido();
         pedido.setId(UUID.randomUUID());
         pedido.setDataPedido(new Date());
         pedido.setAtivo(true);
@@ -54,11 +56,14 @@ public class IniciaBanco {
         pedido.setValorTotal(BigDecimal.ZERO);
 
         pedido.setItemPedidoList(new ArrayList<>());
+        return pedido;
+    }
+
+    private void finalizarDadosPedido(final Pedido pedido, final ProdutoServico ps,
+            final int qtd, final BigDecimal valor, final double desc) {
         pedido.getItemPedidoList().add(criarItem(pedido, ps, qtd, valor));
 
         calcularTotalPedido(pedido, desc);
-
-        pr.save(pedido);
     }
 
     private void calcularTotalPedido(final Pedido pedido, double desc) {
