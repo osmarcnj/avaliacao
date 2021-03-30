@@ -21,9 +21,9 @@ public class PedidoResponse {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss",lenient = OptBoolean.FALSE)
     private Calendar  dataPedido;
 
-    @JsonProperty("valor")
     private BigDecimal valor;
 
+    @JsonProperty("valor_desconto")
     private BigDecimal desconto;
 
     @JsonProperty("valor_total")
