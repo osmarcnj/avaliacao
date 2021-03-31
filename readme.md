@@ -10,7 +10,7 @@ para resolver a prova.
 implementados e os critérios de aceitação.
 • Não é necessário fazer a parte do front-end desse desafio, apenas back-end; se você for um
 programador full stack você receberá uma prova diferente para front-end.
-• O resultado da prova deve ser publicado no GitHub (fornecer a URL) ou enviado em um arquivo ZIP
+• O resultado da prova deve ser publicado no GitHub (fornecer a URL) ou enviado em um arquivo ZIP.
 
 ## 1 - Configuração
 
