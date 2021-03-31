@@ -3,7 +3,11 @@ package br.com.senior.avaliacao.service;
 import br.com.senior.avaliacao.exception.AvaliacaoException;
 import br.com.senior.avaliacao.exception.ObjectNotFoundException;
 import br.com.senior.avaliacao.model.ProdutoServico;
+import br.com.senior.avaliacao.model.QProdutoServico;
 import br.com.senior.avaliacao.repository.ProdutoServicoRepository;
+import br.com.senior.avaliacao.repository.custom.ProdutoServicoRepositoryCustom;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,6 +33,12 @@ public class ProdutoServicoService {
 	@Autowired
     private ProdutoServicoRepository repository;
 
+    @Autowired
+    private ProdutoServicoRepositoryCustom repositoryCustom;
+
+    @PersistenceContext
+    private EntityManager em;
+
     public List<ProdutoServico> listAll(){
         return repository.findAll();
     }
@@ -36,7 +48,14 @@ public class ProdutoServicoService {
     }
 
     public List<ProdutoServico> listPorName(String name){
-        return repository.findByName(name);
+        QProdutoServico qProdutoServico = QProdutoServico.produtoServico;
+        JPAQuery<ProdutoServico> query = new JPAQueryFactory(em).selectFrom(qProdutoServico);
+        if(name != null){
+            query.where(qProdutoServico.name.contains(name));
+        }
+        return  query.fetch();
+
+
     }
 
     public ProdutoServico save(ProdutoServico produtoServico) {

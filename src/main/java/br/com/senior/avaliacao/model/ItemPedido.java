@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class ItemPedido {
 
     @Id
-   // @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(updatable = false, unique = true, nullable = false)
     private UUID id;
 
@@ -31,7 +32,7 @@ public class ItemPedido {
     @ManyToOne
     private Pedido pedido;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private ProdutoServico produtoServico;
 
 }

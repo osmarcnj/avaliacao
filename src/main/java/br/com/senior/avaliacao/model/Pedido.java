@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Pedido {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(updatable = false, unique = true, nullable = false)
     private UUID id;
 

@@ -23,8 +23,7 @@ public class IniciaBanco {
     private ProdutoServicoRepository psr;
     @Autowired
     private PedidoRepository pr;
-    @Autowired
-    private UtilSetting util;
+
 
     @Bean
     public void gerarDados() {
@@ -68,11 +67,11 @@ public class IniciaBanco {
         pedido.setValorTotal(BigDecimal.ZERO);
 
         pedido.setItemPedidoList(new ArrayList<>());
-        pedido.getItemPedidoList().add(util.criarItem(pedido, ps, qtd));
+        pedido.getItemPedidoList().add(UtilSetting.criarItem(pedido, ps, qtd));
         pedido.getItemPedidoList().get(0).setId(UUID.fromString(idItem));
 
 
-        pr.save(util.calcularTotalPedido(pedido));
+        pr.save(UtilSetting.calcularTotalPedido(pedido));
     }
 
 

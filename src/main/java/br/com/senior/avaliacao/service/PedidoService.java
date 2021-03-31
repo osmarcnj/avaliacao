@@ -27,8 +27,6 @@ public class PedidoService {
 
     @Autowired
     private PedidoRepository repository;
-    @Autowired
-    private UtilSetting util;
 
     @Autowired
     private ItemPedidoRepository itemRepository;
@@ -72,14 +70,14 @@ public class PedidoService {
         pedido.setValorTotal(BigDecimal.ZERO);
         List<ItemPedido> itens = new ArrayList<>();
         pedido.getItemPedidoList().forEach(itemPedido -> {
-            itens.add(util.criarItem(pedido, itemPedido.getProdutoServico(), itemPedido.getQtd()));
+            itens.add(UtilSetting.criarItem(pedido, itemPedido.getProdutoServico(), itemPedido.getQtd()));
             if(!itemPedido.getProdutoServico().getAtivo() && itemPedido.getId() == null) {
                 throw new AvaliacaoException("IMPOSSÍVEL SALVAR PRODUTO INATIVO ");
             }
         });
 
         pedido.setItemPedidoList(itens);
-       return repository.save(util.calcularTotalPedido(pedido));
+       return repository.save(UtilSetting.calcularTotalPedido(pedido));
 
         } catch (AvaliacaoException a){
             throw new AvaliacaoException("IMPOSSÍVEL SALVAR PRODUTO INATIVO ");
@@ -100,18 +98,24 @@ public class PedidoService {
     }
     public Pedido addItem(Pedido pedido) {
         try {
-
+            final BigDecimal[] valorTotalItemPedido = {new BigDecimal(0)};
             Pedido finalPedido = pedido;
             pedido.getItemPedidoList().forEach(itemPedido -> {
                     itemPedido.setPedido(finalPedido);
+                    valorTotalItemPedido[0] = valorTotalItemPedido[0].add(
+                            itemPedido.getProdutoServico().getValor().multiply(new BigDecimal(itemPedido.getQtd())));
+                    itemPedido.setValor(valorTotalItemPedido[0]);
+                    itemPedido.setValorTotal(valorTotalItemPedido[0]);
+                    if(itemPedido.getId() == null){
+                        itemPedido.setId(UUID.randomUUID());
+                    }
                 if(!itemPedido.getProdutoServico().getAtivo() && itemPedido.getId() == null) {
                     throw new AvaliacaoException("IMPOSSÍVEL SALVAR PRODUTO INATIVO ");
                 }
-                if(Objects.isNull(itemPedido.getId())) {
-                    itemPedido.setId(UUID.randomUUID());
-                }
+
             });
-            pedido = (pedido.getAtivo()?util.calcularTotalPedido(pedido): pedido );
+
+            pedido = (pedido.getAtivo()?UtilSetting.calcularTotalPedido(pedido): pedido );
 
             return repository.save(pedido);
         } catch (AvaliacaoException a){

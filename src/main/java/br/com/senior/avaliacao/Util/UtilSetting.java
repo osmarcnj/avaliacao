@@ -5,15 +5,16 @@ import br.com.senior.avaliacao.model.ItemPedido;
 import br.com.senior.avaliacao.model.Pedido;
 import br.com.senior.avaliacao.model.ProdutoServico;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+
 public class UtilSetting {
 
-    public Pedido calcularTotalPedido(final Pedido pedido) {
+    public static Pedido calcularTotalPedido(final Pedido pedido) {
         if(pedido.getAtivo()){
             pedido.setValor(BigDecimal.ZERO);
             pedido.setValorTotal(BigDecimal.ZERO);
@@ -33,7 +34,7 @@ public class UtilSetting {
         return  pedido;
     }
 
-    public ItemPedido criarItem(final Pedido pedido, final ProdutoServico ps,
+    public static ItemPedido criarItem(final Pedido pedido, final ProdutoServico ps,
                                  final int qtd) {
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setQtd(qtd);
