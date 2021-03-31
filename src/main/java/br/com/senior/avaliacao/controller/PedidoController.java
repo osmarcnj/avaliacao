@@ -1,11 +1,10 @@
 package br.com.senior.avaliacao.controller;
 
 import br.com.senior.avaliacao.model.Pedido;
-import br.com.senior.avaliacao.model.request.ItemPedidoRequest;
 import br.com.senior.avaliacao.model.request.PedidoRequest;
 import br.com.senior.avaliacao.model.response.ItemPedidoResponse;
 import br.com.senior.avaliacao.model.response.PedidoResponse;
-import br.com.senior.avaliacao.service.ItemPedidoService;
+import br.com.senior.avaliacao.repository.custom.PedidoRepositoryCustom;
 import br.com.senior.avaliacao.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,9 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping(value ="/pedidos")
@@ -35,6 +34,9 @@ public class PedidoController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PedidoRepositoryCustom repositoryCustom;
 
     @PostMapping
     public ResponseEntity<PedidoResponse> criar(@Valid @RequestBody PedidoRequest pedidoRequest){
@@ -97,13 +99,6 @@ public class PedidoController {
         return new ResponseEntity<>(modelToResponse(pedido), HttpStatus.OK);
     }
 
-    private Pedido requestToModel(final PedidoRequest pedidoRequest) {
-        return modelMapper.map(pedidoRequest, Pedido.class);
-    }
-
-    private PedidoResponse modelToResponse(final Pedido pedido) {
-        return modelMapper.map(pedido, PedidoResponse.class);
-    }
 
     @PutMapping(path = "/addItem")
     public ResponseEntity<PedidoResponse> addItem(@Valid @RequestBody PedidoRequest pedidoRequest){
@@ -127,6 +122,38 @@ public class PedidoController {
 
         LOGGER.info("FINALIZANDO - DELETE ITEM");
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //TODO NÃO FUNCIONA AINDA
+    @GetMapping(path = "/listaData")
+    public ResponseEntity<List<Pedido>> findByData(@RequestParam(value = "data_incial", required = false)
+                                                               String data_inicial,
+                                                     @RequestParam (value = "data_final", required = false)
+                                                             String data_final){
+        List pedidoList =new ArrayList();
+        try {SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(sdf.parse(data_inicial));
+            Calendar cal2 = Calendar.getInstance();
+            cal.setTime(sdf.parse(data_final));
+          //  pedidoList = repositoryCustom.buscaPedidoPorData(new Date(data_inicial), cal2);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(pedidoList);
+
+
+    }
+
+
+    private Pedido requestToModel(final PedidoRequest pedidoRequest) {
+        return modelMapper.map(pedidoRequest, Pedido.class);
+    }
+
+    private PedidoResponse modelToResponse(final Pedido pedido) {
+        return modelMapper.map(pedido, PedidoResponse.class);
     }
 
 }

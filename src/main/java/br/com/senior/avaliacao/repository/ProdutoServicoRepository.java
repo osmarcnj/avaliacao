@@ -12,4 +12,5 @@ public interface ProdutoServicoRepository extends JpaRepository<ProdutoServico, 
 
     @Query("select ps from produtoservico ps where ps.name like %?1%")
     List<ProdutoServico> findByName(String name);
+
 }

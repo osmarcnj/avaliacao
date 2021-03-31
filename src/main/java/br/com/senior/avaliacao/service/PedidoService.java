@@ -7,6 +7,7 @@ import br.com.senior.avaliacao.model.ItemPedido;
 import br.com.senior.avaliacao.model.Pedido;
 import br.com.senior.avaliacao.repository.ItemPedidoRepository;
 import br.com.senior.avaliacao.repository.PedidoRepository;
+import br.com.senior.avaliacao.repository.custom.PedidoRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
