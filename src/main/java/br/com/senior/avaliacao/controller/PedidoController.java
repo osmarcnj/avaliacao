@@ -124,29 +124,6 @@ public class PedidoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //TODO NÃO FUNCIONA AINDA
-    @GetMapping(path = "/listaData")
-    public ResponseEntity<List<Pedido>> findByData(@RequestParam(value = "data_incial", required = false)
-                                                               String data_inicial,
-                                                     @RequestParam (value = "data_final", required = false)
-                                                             String data_final){
-        List pedidoList =new ArrayList();
-        try {SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(sdf.parse(data_inicial));
-            Calendar cal2 = Calendar.getInstance();
-            cal.setTime(sdf.parse(data_final));
-          //  pedidoList = repositoryCustom.buscaPedidoPorData(new Date(data_inicial), cal2);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return ResponseEntity.ok(pedidoList);
-
-
-    }
-
 
     private Pedido requestToModel(final PedidoRequest pedidoRequest) {
         return modelMapper.map(pedidoRequest, Pedido.class);
